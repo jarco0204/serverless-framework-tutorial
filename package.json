@@ -3,5 +3,9 @@
     "serverless-s3-sync": "^3.1.0",
     "serverless-webpack": "^5.11.0",
     "webpack": "^5.75.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "prettier": "^2.8.1"
   }
 }

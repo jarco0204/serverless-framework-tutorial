@@ -18,7 +18,7 @@ service: serverless-tutorial
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
-frameworkVersion: '3'
+frameworkVersion: "3"
 
 provider:
   name: aws
@@ -32,9 +32,8 @@ provider:
   iamRoleStatements:
     - Effect: Allow
       Action:
-          - dynamodb:*
-      Resource: '*'
-
+        - dynamodb:*
+      Resource: "*"
 
 # you can overwrite defaults here
 #  stage: dev
@@ -71,31 +70,37 @@ provider:
 
 # Removing external bucket
 plugins:
-      - serverless-webpack
+  - serverless-webpack
 #     - serverless-s3-sync
 custom:
-      tableName: player-points
+  tableName: player-points
 #     s3Sync:
 #         - bucketName: serverlesstest1-bucket
 #           localDir: uploadData
 
 package:
-    individually: true
+  individually: true
 
 functions:
   getUser:
     handler: lambdas/endpoints/getUser.handler
     events:
-        - httpApi:
-            path: /get-user/{ID}
-            method: GET
-  
+      - httpApi:
+          path: /get-user/{ID}
+          method: GET
+
   getPlayerScore:
     handler: lambdas/endpoints/getPlayerScore.handler
     events:
-        - httpApi:
-            path: /get-player-score/{ID}
-            method: GET
+      - httpApi:
+          path: /get-player-score/{ID}
+          method: GET
+  createPlayerScore:
+    handler: lambdas/endpoints/createPlayerScore.handler
+    events:
+      - httpApi:
+          path: /create-player-score/{ID}
+          method: POST
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -139,22 +144,21 @@ functions:
 # you can add CloudFormation resource templates here
 resources:
   Resources:
-#     DemoBucketUpload:
-#       Type: AWS::S3::Bucket
-#       Properties:
-#         BucketName: serverlesstest1-bucket
-      MyDynamoDbTable:
-        Type: AWS::DynamoDB::Table
-        Properties:
-          TableName: ${self:custom.tableName}
-          AttributeDefinitions:
-            - AttributeName: ID
-              AttributeType: S
-          KeySchema:
-            - AttributeName: ID
-              KeyType: HASH
-          BillingMode: PAY_PER_REQUEST
-
+    #     DemoBucketUpload:
+    #       Type: AWS::S3::Bucket
+    #       Properties:
+    #         BucketName: serverlesstest1-bucket
+    MyDynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: ID
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ID
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
 #  Outputs:
 #     NewOutput:
 #       Description: "Description for the output"
