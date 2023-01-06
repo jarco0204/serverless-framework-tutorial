@@ -29,10 +29,12 @@ provider:
     cors: true
   environment:
     tableName: ${self:custom.tableName}
+    bucketName: ${self:custom.bucketName}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:*
+        - s3:*
       Resource: "*"
 
 # you can overwrite defaults here
@@ -74,6 +76,7 @@ plugins:
 #     - serverless-s3-sync
 custom:
   tableName: player-points
+  bucketName: serverlesstest1-bucket
 #     s3Sync:
 #         - bucketName: serverlesstest1-bucket
 #           localDir: uploadData
@@ -100,6 +103,20 @@ functions:
     events:
       - httpApi:
           path: /create-player-score/{ID}
+          method: POST
+
+  createFile:
+    handler: lambdas/endpoints/createFile.handler
+    events:
+      - httpApi:
+          path: /create-file/{fileName}
+          method: POST
+
+  getFile:
+    handler: lambdas/endpoints/getFile.handler
+    events:
+      - httpApi:
+          path: /get-file/{fileName}
           method: POST
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -147,7 +164,7 @@ resources:
     #     DemoBucketUpload:
     #       Type: AWS::S3::Bucket
     #       Properties:
-    #         BucketName: serverlesstest1-bucket
+    #         BucketName: ${self:custom.bucketName}
     MyDynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:
