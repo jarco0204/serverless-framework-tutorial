@@ -36,6 +36,26 @@ provider:
         - dynamodb:*
         - s3:*
       Resource: "*"
+  apiKeys:
+    - free:
+        - myFreeApiKey
+    - paid:
+        - myPaidApiKey
+  usagePlan:
+    - free:
+      quota:
+        limit: 1000
+        period: MONTH
+      throttle:
+        rateLimit: 5
+        burstLimit: 20
+    - paid:
+      quota:
+        limit: 10000
+        period: MONTH
+      throttle:
+        rateLimit: 50
+        burstLimit: 200
 
 # you can overwrite defaults here
 #  stage: dev
@@ -91,6 +111,7 @@ functions:
       - httpApi:
           path: /get-user/{ID}
           method: GET
+          private: true
 
   getPlayerScore:
     handler: lambdas/endpoints/getPlayerScore.handler
@@ -118,6 +139,19 @@ functions:
       - httpApi:
           path: /get-file/{fileName}
           method: POST
+  proxy:
+    handler: lambdas/endpoints/proxy.handler
+    events:
+      - httpApi:
+          path: /chuck-norris/{proxy+}
+          method: ANY
+          integration: http-proxy
+          request:
+            uri: http://api.icndb.com/{proxy}
+            parameters:
+              paths:
+                proxy: true
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
